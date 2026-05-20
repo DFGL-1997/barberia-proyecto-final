@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>BarberIA — Acceso</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dim: #7a5f28;
+    --bg: #0c0c0c;
+    --surface: #141414;
+    --surface2: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #f0ede6;
+    --text-dim: #7a7370;
+    --danger: #e05252;
+    --success: #52c47a;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    overflow: hidden;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+  }
+
+  /* LEFT PANEL */
+  .left-panel {
+    position: relative;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 60px;
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(201,168,76,0.03) 40px,
+      rgba(201,168,76,0.03) 41px
+    );
+    pointer-events: none;
+  }
+
+  .left-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -120px;
+    left: -120px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .brand-area {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .pole-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+
+  .pole-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .brand-name span {
+    color: var(--gold);
+  }
+
+  .brand-tagline {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 60px;
+  }
+
+  .decorative-line {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    margin: 0 auto 40px;
+  }
+
+  .features-list {
+    list-style: none;
+    text-align: left;
+    display: inline-block;
+  }
+
+  .features-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  .features-list li::before {
+    content: '◆';
+    color: var(--gold);
+    font-size: 8px;
+    flex-shrink: 0;
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+    background: var(--bg);
+    position: relative;
+  }
+
+  .right-panel::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    right: -200px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tab-row {
+    display: flex;
+    gap: 0;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 14px 0;
+    margin-right: 32px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s;
+  }
+
+  .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+  }
+
+  .tab-btn.active {
+    color: var(--gold);
+  }
+
+  .tab-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .form-subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .field input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    padding: 13px 16px;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .field input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .field input::placeholder {
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--gold);
+    color: #0c0c0c;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .msg {
+    margin-top: 18px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+  }
+
+  .msg.error {
+    background: rgba(224,82,82,0.12);
+    border: 1px solid rgba(224,82,82,0.3);
+    color: #e88;
+    display: block;
+  }
+
+  .msg.success {
+    background: rgba(82,196,122,0.12);
+    border: 1px solid rgba(82,196,122,0.3);
+    color: #7de;
+    display: block;
+  }
+
+  .form-panel { display: none; }
+  .form-panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .divider-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 40px 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- LEFT: BRAND -->
+  <div class="left-panel">
+    <div class="brand-area">
+      <div class="pole-icon">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="24" y="4" width="16" height="56" rx="8" fill="#1e1e1e" stroke="#c9a84c" stroke-width="1.5"/>
+          <path d="M24 12 Q32 20 40 28 Q32 36 24 44 Q32 52 40 56" stroke="#c9a84c" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M24 12 Q32 20 40 28 Q32 36 24 44" stroke="#e8c96d" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+          <circle cx="32" cy="4" r="4" fill="#c9a84c"/>
+          <circle cx="32" cy="60" r="4" fill="#c9a84c"/>
+        </svg>
+      </div>
+      <div class="brand-name">Barber<span>IA</span></div>
+      <div class="brand-tagline">Sistema de gestión premium</div>
+      <div class="decorative-line"></div>
+      <ul class="features-list">
+        <li>Reservas en tiempo real</li>
+        <li>Panel administrativo completo</li>
+        <li>Gestión de servicios y citas</li>
+        <li>Control de ingresos diarios</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="right-panel">
+    <div class="form-container">
+
+      <div class="tab-row">
+        <button class="tab-btn active" onclick="switchTab('login', this)">Acceder</button>
+        <button class="tab-btn" onclick="switchTab('registro', this)">Registro</button>
+      </div>
+
+      <!-- LOGIN -->
+      <div id="panel-login" class="form-panel active">
+        <h2 class="form-title">Bienvenido<br>de regreso.</h2>
+        <p class="form-subtitle">Ingresa con tus credenciales para continuar.</p>
+
+        <div class="field">
+          <label>Usuario</label>
+          <input type="text" id="l-usuario" placeholder="tu_usuario">
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="l-password" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()">
+        </div>
+
+        <button class="btn-primary" onclick="login()">Ingresar al sistema</button>
+        <div id="msg-login" class="msg"></div>
+      </div>
+
+      <!-- REGISTRO -->
+      <div id="panel-registro" class="form-panel">
+        <h2 class="form-title">Crear<br>cuenta.</h2>
+        <p class="form-subtitle">Completa tus datos para registrarte.</p>
+
+        <div class="divider-fields">
+          <div class="field">
+            <label>Nombre</label>
+            <input type="text" id="r-nombre" placeholder="Juan García">
+          </div>
+          <div class="field">
+            <label>Teléfono</label>
+            <input type="text" id="r-telefono" placeholder="300 000 0000">
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" id="r-email" placeholder="juan@correo.com">
+        </div>
+        <div class="divider-fields">
+          <div class="field">
+            <label>Usuario</label>
+            <input type="text" id="r-usuario" placeholder="juangarcia">
+          </div>
+          <div class="field">
+            <label>Contraseña</label>
+            <input type="password" id="r-password" placeholder="••••••••">
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="registrar()">Crear cuenta</button>
+        <div id="msg-registro" class="msg"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+const API = 'http://192.168.100.3:3001';
+
+// Redirigir si ya hay sesión
+const sesionActual = localStorage.getItem('usuario');
+if (sesionActual) {
+  const u = JSON.parse(sesionActual);
+  window.location.href = u.rol === 'admin' ? 'admin.html' : 'cliente.html';
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + tab).classList.add('active');
+  document.getElementById('msg-login').className = 'msg';
+  document.getElementById('msg-registro').className = 'msg';
+}
+
+function showMsg(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = 'msg ' + type;
+}
+
+async function login() {
+  const usuario = document.getElementById('l-usuario').value.trim();
+  const password = document.getElementById('l-password').value;
+  if (!usuario || !password) return showMsg('msg-login', 'Completa todos los campos.', 'error');
+
+  try {
+    const res = await axios.post(`${API}/login`, { usuario, password });
+    localStorage.setItem('usuario', JSON.stringify(res.data));
+    showMsg('msg-login', 'Acceso correcto. Redirigiendo...', 'success');
+    setTimeout(() => {
+      window.location.href = res.data.rol === 'admin' ? 'admin.html' : 'cliente.html';
+    }, 600);
+  } catch (err) {
+    showMsg('msg-login', err.response?.data?.mensaje || 'Credenciales incorrectas.', 'error');
+  }
+}
+
+async function registrar() {
+  const data = {
+    nombre: document.getElementById('r-nombre').value.trim(),
+    telefono: document.getElementById('r-telefono').value.trim(),
+    email: document.getElementById('r-email').value.trim(),
+    usuario: document.getElementById('r-usuario').value.trim(),
+    password: document.getElementById('r-password').value,
+    rol: 'cliente'
+  };
+
+  if (!data.nombre || !data.usuario || !data.password) {
+    return showMsg('msg-registro', 'Nombre, usuario y contraseña son obligatorios.', 'error');
+  }
+
+  try {
+    await axios.post(`${API}/clientes`, data);
+    showMsg('msg-registro', '¡Cuenta creada! Ahora puedes ingresar.', 'success');
+    setTimeout(() => {
+      document.getElementById('r-nombre').value = '';
+      document.getElementById('r-telefono').value = '';
+      document.getElementById('r-email').value = '';
+      document.getElementById('r-usuario').value = '';
+      document.getElementById('r-password').value = '';
+      switchTab('login', document.querySelectorAll('.tab-btn')[0]);
+    }, 1500);
+  } catch (err) {
+    showMsg('msg-registro', err.response?.data?.mensaje || 'Error al registrar.', 'error');
+  }
+}
+</script>
+
+</body>
+</html>

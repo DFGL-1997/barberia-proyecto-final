@@ -1,0 +1,172 @@
+version: '3.8'
+
+services:
+
+  mysql-clientes:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_clientes
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_clientes_data:/var/lib/mysql
+      - ./mysql/init-clientes.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - barberia-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  mysql-servicios:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_servicios
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_servicios_data:/var/lib/mysql
+      - ./mysql/init-servicios.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - barberia-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  mysql-citas:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_citas
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_citas_data:/var/lib/mysql
+      - ./mysql/init-citas.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - barberia-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  clientes:
+    image: dfgl17/barberia-clientes:v2
+    restart: always
+    environment:
+      DB_HOST: mysql-clientes
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_clientes
+    ports:
+      - "3001:3001"
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  servicios:
+    image: dfgl17/barberia-servicios:latest
+    restart: always
+    environment:
+      DB_HOST: mysql-servicios
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_servicios
+    ports:
+      - "3002:3002"
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  citas:
+    image: dfgl17/barberia-citas:v3
+    restart: always
+    environment:
+      DB_HOST: mysql-citas
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_citas
+    ports:
+      - "3003:3003"
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  frontend:
+    image: dfgl17/barberia-frontend:v4
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == worker
+
+  haproxy:
+    image: dfgl17/barberia-haproxy:latest
+    restart: always
+    ports:
+      - "8080:8080"
+      - "8404:8404"
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  analytics:
+    image: dfgl17/barberia-analytics:latest
+    restart: always
+    ports:
+      - "3004:3004"
+    volumes:
+      - /vagrant/barberia-docker/spark:/app/spark
+    networks:
+      - barberia-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  barberia-net:
+    driver: overlay
+    attachable: true
+
+volumes:
+  mysql_clientes_data:
+  mysql_servicios_data:
+  mysql_citas_data:

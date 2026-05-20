@@ -1,0 +1,266 @@
+{
+  "servicios_populares": [
+    {
+      "servicio": "Corte de cabello Basico",
+      "total": 541
+    },
+    {
+      "servicio": "Arreglo de barba",
+      "total": 531
+    },
+    {
+      "servicio": "Corte + lavado",
+      "total": 524
+    },
+    {
+      "servicio": "Corte de cabello Basico + barba",
+      "total": 516
+    },
+    {
+      "servicio": "Afeitado clasico navaja",
+      "total": 310
+    },
+    {
+      "servicio": "Keratina",
+      "total": 304
+    },
+    {
+      "servicio": "Coloracion fantasia",
+      "total": 294
+    },
+    {
+      "servicio": "Corte clasico",
+      "total": 283
+    },
+    {
+      "servicio": "Corte moderno",
+      "total": 281
+    },
+    {
+      "servicio": "Cejas + barba",
+      "total": 281
+    }
+  ],
+  "barberos_top": [
+    {
+      "barbero": "Tomas Clipper",
+      "total": 297
+    },
+    {
+      "barbero": "Kevin El Maestro",
+      "total": 287
+    },
+    {
+      "barbero": "Yeison Barber",
+      "total": 286
+    },
+    {
+      "barbero": "Pipe Navajas",
+      "total": 283
+    },
+    {
+      "barbero": "Jhon Navajas",
+      "total": 282
+    },
+    {
+      "barbero": "Diego Fadero",
+      "total": 281
+    },
+    {
+      "barbero": "Tato Fade",
+      "total": 281
+    },
+    {
+      "barbero": "Andres El Pro",
+      "total": 279
+    },
+    {
+      "barbero": "Mateo Barber",
+      "total": 278
+    },
+    {
+      "barbero": "Camilo Pro",
+      "total": 276
+    }
+  ],
+  "ingresos_por_mes": [
+    {
+      "anio": 2023,
+      "mes": 1,
+      "ingresos": 6548000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 2,
+      "ingresos": 5869000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 3,
+      "ingresos": 6006000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 4,
+      "ingresos": 6609000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 5,
+      "ingresos": 6024000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 6,
+      "ingresos": 6343000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 7,
+      "ingresos": 6589000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 8,
+      "ingresos": 6079000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 9,
+      "ingresos": 6402000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 10,
+      "ingresos": 6563000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 11,
+      "ingresos": 6253000.0
+    },
+    {
+      "anio": 2023,
+      "mes": 12,
+      "ingresos": 7099000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 1,
+      "ingresos": 6393000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 2,
+      "ingresos": 5556000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 3,
+      "ingresos": 6768000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 4,
+      "ingresos": 5818000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 5,
+      "ingresos": 7099000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 6,
+      "ingresos": 6021000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 7,
+      "ingresos": 6024000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 8,
+      "ingresos": 5458000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 9,
+      "ingresos": 7013000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 10,
+      "ingresos": 6483000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 11,
+      "ingresos": 6202000.0
+    },
+    {
+      "anio": 2024,
+      "mes": 12,
+      "ingresos": 6500000.0
+    }
+  ],
+  "metodos_pago": [
+    {
+      "metodo_pago": "tarjeta",
+      "total": 1672
+    },
+    {
+      "metodo_pago": "nequi",
+      "total": 1609
+    },
+    {
+      "metodo_pago": "efectivo",
+      "total": 1605
+    },
+    {
+      "metodo_pago": "daviplata",
+      "total": 1575
+    },
+    {
+      "metodo_pago": "transferencia",
+      "total": 1540
+    }
+  ],
+  "citas_por_estado": [
+    {
+      "estado": "atendida",
+      "total": 5713
+    },
+    {
+      "estado": "cancelada",
+      "total": 2287
+    },
+    {
+      "estado": "pendiente",
+      "total": 1
+    }
+  ],
+  "horas_pico": [
+    {
+      "hora": 12,
+      "total": 853
+    },
+    {
+      "hora": 8,
+      "total": 830
+    },
+    {
+      "hora": 17,
+      "total": 822
+    },
+    {
+      "hora": 10,
+      "total": 818
+    },
+    {
+      "hora": 14,
+      "total": 814
+    }
+  ]
+}

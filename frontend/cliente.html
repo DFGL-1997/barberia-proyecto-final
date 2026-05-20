@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>BarberIA — Mi Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c96d;
+    --gold-dim: rgba(201,168,76,0.13);
+    --bg: #0c0c0c;
+    --surface: #141414;
+    --surface2: #1c1c1c;
+    --border: #252525;
+    --border2: #333;
+    --text: #f0ede6;
+    --text-dim: #666;
+    --text-mid: #999;
+    --danger: #e05252;
+    --success: #52c47a;
+    --warning: #f0a843;
+  }
+
+  html, body { min-height: 100%; background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); }
+
+  /* TOPNAV */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .topnav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  .topnav-brand span { color: var(--gold); }
+
+  .topnav-center {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tab-nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-mid);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.3px;
+  }
+
+  .tab-nav-btn:hover { background: var(--surface2); color: var(--text); }
+  .tab-nav-btn.active { background: var(--gold-dim); color: var(--gold); }
+
+  .topnav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .user-pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    padding: 6px 14px 6px 10px;
+    border-radius: 40px;
+  }
+
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    background: var(--gold);
+    color: #0c0c0c;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .user-name {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .btn-logout {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-logout:hover { color: var(--danger); border-color: rgba(224,82,82,0.4); }
+
+  /* CONTENT */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; }
+  .section.active { display: block; animation: fadeIn 0.25s ease; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+  /* SECTION HEADING */
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .section-heading h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .section-heading p {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-weight: 300;
+  }
+
+  /* BOOKING CARD */
+  .booking-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .booking-header {
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, var(--surface), #1a1710);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .booking-header::after {
+    content: '✦';
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+    color: var(--gold);
+    opacity: 0.15;
+  }
+
+  .booking-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .booking-header p { font-size: 13px; color: var(--text-dim); }
+
+  .booking-body {
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .f-group { position: relative; }
+
+  .f-group label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .f-input {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .f-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.1);
+  }
+
+  .f-input option { background: var(--surface2); }
+
+  .price-display {
+    grid-column: 1 / -1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .price-label { font-size: 12px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+
+  .price-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .booking-footer {
+    padding: 0 32px 32px;
+    grid-column: 1 / -1;
+  }
+
+  .btn-book {
+    width: 100%;
+    background: var(--gold);
+    color: #0c0c0c;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .btn-book:hover { background: var(--gold-light); }
+  .btn-book:active { transform: scale(0.99); }
+  .btn-book:disabled { background: #333; color: var(--text-dim); cursor: not-allowed; }
+
+  /* CITAS CARDS */
+  .citas-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .cita-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    transition: border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cita-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .cita-card.pendiente::before { background: var(--warning); }
+  .cita-card.atendida::before  { background: var(--success); }
+  .cita-card.cancelada::before { background: var(--danger); opacity:0.5; }
+
+  .cita-card:hover { border-color: var(--border2); }
+
+  .cita-info h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+
+  .cita-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .cita-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .cita-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+  }
+
+  .badge.pendiente { background: rgba(240,168,67,0.15); color: var(--warning); border: 1px solid rgba(240,168,67,0.3); }
+  .badge.atendida  { background: rgba(82,196,122,0.15); color: var(--success); border: 1px solid rgba(82,196,122,0.3); }
+  .badge.cancelada { background: rgba(224,82,82,0.12); color: #e88; border: 1px solid rgba(224,82,82,0.25); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text-mid);
+  }
+
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-outline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-danger {
+    background: transparent;
+    border: 1px solid rgba(224,82,82,0.3);
+    color: var(--danger);
+  }
+
+  .btn-danger:hover { background: rgba(224,82,82,0.1); }
+  .btn-danger:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .empty-state {
+    text-align: center;
+    padding: 70px 20px;
+    color: var(--text-dim);
+  }
+
+  .empty-state .icon { font-size: 42px; margin-bottom: 14px; }
+  .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text-mid); margin-bottom: 8px; }
+  .empty-state p { font-size: 13px; }
+
+  /* MODAL */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    padding: 24px;
+  }
+
+  .modal-backdrop.open { display: flex; animation: fadeIn 0.2s; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 32px;
+    position: relative;
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp { from { transform:translateY(20px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+
+  .modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-field { margin-bottom: 16px; }
+  .modal-field label { display: block; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 7px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #0c0c0c;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); }
+
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--gold);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 999;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 320px;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.error { border-left-color: var(--danger); }
+
+  @media (max-width: 640px) {
+    .topnav { padding: 0 16px; }
+    .topnav-center { display: none; }
+    .content { padding: 24px 16px 60px; }
+    .booking-body { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPNAV -->
+<nav class="topnav">
+  <div class="topnav-brand">Barber<span>IA</span></div>
+
+  <div class="topnav-center">
+    <button class="tab-nav-btn active" onclick="showSection('reservar', this)">Reservar cita</button>
+    <button class="tab-nav-btn" onclick="showSection('miscitas', this)">Mis citas</button>
+  </div>
+
+  <div class="topnav-right">
+    <div class="user-pill">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <span class="user-name" id="user-name">—</span>
+    </div>
+    <button class="btn-logout" onclick="logout()">Salir</button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- RESERVAR -->
+  <div id="sec-reservar" class="section active">
+    <div class="section-heading">
+      <h2>Agenda tu cita.</h2>
+      <p>Selecciona el servicio, fecha y hora de tu preferencia.</p>
+    </div>
+
+    <div class="booking-card">
+      <div class="booking-header">
+        <h3>Nueva reserva</h3>
+        <p>Todos los campos son obligatorios</p>
+      </div>
+
+      <div class="booking-body">
+        <div class="f-group" style="grid-column:1/-1">
+          <label>Servicio</label>
+          <select class="f-input" id="b-servicio" onchange="actualizarPrecio()">
+            <option value="">Cargando servicios…</option>
+          </select>
+        </div>
+
+        <div class="f-group" style="grid-column:1/-1">
+          <label>Barbero de preferencia</label>
+          <select class="f-input" id="b-barbero">
+            <option value="">Sin preferencia</option>
+          </select>
+        </div>
+
+        <div class="f-group">
+          <label>Fecha</label>
+          <input class="f-input" type="date" id="b-fecha">
+        </div>
+
+        <div class="f-group">
+          <label>Hora</label>
+          <input class="f-input" type="time" id="b-hora">
+        </div>
+
+        <div class="f-group" style="grid-column:1/-1">
+          <label>Método de pago</label>
+          <select class="f-input" id="b-pago">
+            <option value="efectivo">💵 Efectivo</option>
+            <option value="transferencia">📲 Transferencia</option>
+            <option value="tarjeta">💳 Tarjeta</option>
+            <option value="nequi">📱 Nequi</option>
+            <option value="daviplata">📱 Daviplata</option>
+          </select>
+        </div>
+
+        <div class="price-display">
+          <span class="price-label">Total a pagar</span>
+          <span class="price-value">$<span id="b-precio">0</span></span>
+        </div>
+      </div>
+
+      <div class="booking-footer">
+        <button class="btn-book" onclick="crearCita()" id="btn-reservar">
+          Confirmar reserva
+        </button>
+        <div id="msg-cita" style="margin-top:14px;text-align:center;font-size:13px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MIS CITAS -->
+  <div id="sec-miscitas" class="section">
+    <div class="section-heading">
+      <h2>Mis citas.</h2>
+      <p>Historial y estado de tus reservas.</p>
+    </div>
+
+    <div class="citas-grid" id="citas-list">
+      <div class="empty-state">
+        <div class="icon">◷</div>
+        <h3>Cargando citas…</h3>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL EDITAR CITA -->
+<div class="modal-backdrop" id="modal-editar">
+  <div class="modal">
+    <button class="modal-close" onclick="cerrarModal()">✕</button>
+    <div class="modal-title">Reprogramar cita</div>
+    <input type="hidden" id="e-id">
+    <div class="modal-field">
+      <label>Nueva fecha</label>
+      <input class="f-input" type="date" id="e-fecha">
+    </div>
+    <div class="modal-field">
+      <label>Nueva hora</label>
+      <input class="f-input" type="time" id="e-hora">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-gold" onclick="guardarEdicion()">Guardar cambios</button>
+      <button class="btn btn-outline" onclick="cerrarModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+const API_CLIENTES  = 'http://192.168.100.3:3001';
+const API_SERVICIOS = 'http://192.168.100.3:3002/servicios';
+const API_CITAS     = 'http://192.168.100.3:3003/citas';
+
+// === SESIÓN ===
+const sesionData = localStorage.getItem('usuario');
+if (!sesionData) { window.location.href = 'index.html'; }
+const sesion = sesionData ? JSON.parse(sesionData) : null;
+if (sesion && sesion.rol === 'admin') { window.location.href = 'admin.html'; }
+
+// Poblar header de usuario
+if (sesion) {
+  document.getElementById('user-name').textContent = sesion.nombre || sesion.usuario;
+  document.getElementById('user-avatar').textContent = (sesion.nombre || sesion.usuario).charAt(0).toUpperCase();
+}
+
+// Fecha mínima = hoy
+document.getElementById('b-fecha').min = new Date().toISOString().slice(0,10);
+
+// === TOAST ===
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type==='error' ? ' error' : '');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// === NAVEGACIÓN ===
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  if (el) el.classList.add('active');
+  if (id === 'miscitas') cargarMisCitas();
+}
+
+// === MODAL ===
+function abrirModal(id, fecha, hora) {
+  document.getElementById('e-id').value = id;
+  document.getElementById('e-fecha').value = fecha || '';
+  document.getElementById('e-hora').value = hora || '';
+  document.getElementById('modal-editar').classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('modal-editar').classList.remove('open');
+}
+
+// === SERVICIOS ===
+async function cargarServicios() {
+  try {
+    const res = await axios.get(API_SERVICIOS);
+    const sel = document.getElementById('b-servicio');
+    sel.innerHTML = '';
+    if (res.data.length === 0) {
+      sel.innerHTML = '<option value="">Sin servicios disponibles</option>';
+      return;
+    }
+    res.data.forEach(s => {
+      sel.innerHTML += `<option value="${s.id}" data-precio="${s.precio}">${s.nombre} — $${parseFloat(s.precio).toLocaleString('es-CO')}</option>`;
+    });
+    actualizarPrecio();
+  } catch(e) {
+    document.getElementById('b-servicio').innerHTML = '<option>Error al cargar</option>';
+  }
+}
+
+async function cargarBarberos() {
+  try {
+    const res = await axios.get(`${API_CLIENTES}/barberos`);
+    const sel = document.getElementById('b-barbero');
+    sel.innerHTML = '<option value="">Sin preferencia</option>';
+
+    if (res.data.length === 0) {
+      sel.innerHTML = '<option value="">No hay barberos disponibles</option>';
+      return;
+    }
+
+    res.data.forEach(b => {
+      sel.innerHTML += `<option value="${b.id}">${b.nombre}</option>`;
+    });
+  } catch(e) {
+    document.getElementById('b-barbero').innerHTML = '<option value="">Error al cargar barberos</option>';
+  }
+}
+
+function actualizarPrecio() {
+  const sel = document.getElementById('b-servicio');
+  const opt = sel.options[sel.selectedIndex];
+  const precio = opt?.dataset?.precio || 0;
+  document.getElementById('b-precio').textContent = parseFloat(precio).toLocaleString('es-CO');
+}
+
+// === CREAR CITA ===
+async function crearCita() {
+  const servicio_id = document.getElementById('b-servicio').value;
+  const barbero_id  = document.getElementById('b-barbero').value || null;
+  const fecha       = document.getElementById('b-fecha').value;
+  const hora        = document.getElementById('b-hora').value;
+  const metodo_pago = document.getElementById('b-pago').value;
+
+  if (!servicio_id || !fecha || !hora) {
+    const msg = document.getElementById('msg-cita');
+    msg.style.color = '#e88';
+    msg.textContent = 'Por favor selecciona servicio, fecha y hora.';
+    return;
+  }
+
+  const btn = document.getElementById('btn-reservar');
+  btn.disabled = true;
+  btn.textContent = 'Procesando…';
+
+  try {
+    await axios.post(API_CITAS, {
+      cliente_id: sesion.id,
+      servicio_id,
+      barbero_id,
+      fecha,
+      hora,
+      metodo_pago
+    });
+
+    toast('✦ ¡Cita reservada con éxito!');
+    document.getElementById('b-barbero').value = '';
+    document.getElementById('b-fecha').value = '';
+    document.getElementById('b-hora').value = '';
+    document.getElementById('msg-cita').textContent = '';
+
+    // Opcional: ir a ver citas
+    setTimeout(() => {
+      showSection('miscitas', document.querySelectorAll('.tab-nav-btn')[1]);
+    }, 800);
+
+  } catch(e) {
+    const msg = document.getElementById('msg-cita');
+    msg.style.color = '#e88';
+    msg.textContent = e.response?.data?.mensaje || 'Error al crear la cita.';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Confirmar reserva';
+  }
+}
+
+// === MIS CITAS ===
+async function cargarMisCitas() {
+  const container = document.getElementById('citas-list');
+  container.innerHTML = '<div class="empty-state"><div class="icon">◷</div><p>Cargando…</p></div>';
+
+  try {
+    const res = await axios.get(API_CITAS + '?pagina=1&limite=500');
+    const misCitas = (res.data.citas || res.data).filter(c => c.cliente_id == sesion.id || c.cliente === sesion.nombre);
+
+    if (misCitas.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="icon">✦</div>
+          <h3>Sin citas aún</h3>
+          <p>Reserva tu primera cita usando el botón "Reservar cita".</p>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+
+    misCitas
+      .sort((a,b) => (a.fecha + a.hora) > (b.fecha + b.hora) ? -1 : 1)
+      .forEach(c => {
+        const fecha = c.fecha ? c.fecha.slice(0,10) : '—';
+        const esPendiente = c.estado === 'pendiente';
+
+        container.innerHTML += `
+          <div class="cita-card ${c.estado}">
+            <div class="cita-info">
+              <h4>${c.servicio || 'Servicio'}</h4>
+              <div class="cita-meta">
+                <span class="cita-meta-item">📅 ${fecha}</span>
+                <span class="cita-meta-item">⏰ ${c.hora || '—'}</span>
+                <span class="cita-meta-item">💵 $${parseFloat(c.precio||0).toLocaleString('es-CO')}</span>
+                <span class="cita-meta-item">💳 ${c.metodo_pago || '—'}</span>
+                <span class="cita-meta-item">Barbero: ${c.barbero || 'Sin preferencia'}</span>
+              </div>
+            </div>
+            <div class="cita-actions">
+              <span class="badge ${c.estado}">${c.estado}</span>
+              <div style="display:flex;gap:6px;margin-top:4px">
+                <button
+                  class="btn btn-outline"
+                  onclick="abrirModal(${c.id}, '${fecha}', '${c.hora || ''}')"
+                  ${!esPendiente ? 'disabled title="Solo se pueden reprogramar citas pendientes"' : ''}>
+                  Reprogramar
+                </button>
+                <button
+                  class="btn btn-danger"
+                  onclick="cancelarCita(${c.id})"
+                  ${!esPendiente ? 'disabled' : ''}>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>`;
+      });
+
+  } catch(e) {
+    container.innerHTML = '<div class="empty-state"><p>Error al cargar tus citas. Intenta de nuevo.</p></div>';
+  }
+}
+
+// === EDITAR CITA ===
+async function guardarEdicion() {
+  const id    = document.getElementById('e-id').value;
+  const fecha = document.getElementById('e-fecha').value;
+  const hora  = document.getElementById('e-hora').value;
+
+  if (!fecha || !hora) return toast('Selecciona fecha y hora.', 'error');
+
+  try {
+    await axios.put(`${API_CITAS}/${id}`, { fecha, hora });
+    cerrarModal();
+    toast('✦ Cita reprogramada correctamente');
+    cargarMisCitas();
+  } catch(e) {
+    toast('Error al reprogramar.', 'error');
+  }
+}
+
+// === CANCELAR CITA ===
+async function cancelarCita(id) {
+  if (!confirm('¿Cancelar esta cita? Esta acción no se puede deshacer.')) return;
+  try {
+    await axios.put(`${API_CITAS}/${id}`, { estado: 'cancelada' });
+    toast('Cita cancelada');
+    cargarMisCitas();
+  } catch(e) {
+    toast('Error al cancelar.', 'error');
+  }
+}
+
+// === LOGOUT ===
+function logout() {
+  localStorage.removeItem('usuario');
+  window.location.href = 'index.html';
+}
+
+// === INIT ===
+cargarServicios();
+cargarBarberos();
+</script>
+
+</body>
+</html>
