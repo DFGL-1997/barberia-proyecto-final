@@ -1,4 +1,4 @@
-# BarberIA — Proyecto Final de Infraestructura
+# BarberIA — Proyecto Final de Redes 
 
 ![Docker](https://img.shields.io/badge/Docker-Swarm-2496ED?logo=docker)
 ![Apache Spark](https://img.shields.io/badge/Apache-Spark_3.5.8-E25A1C?logo=apachespark)
