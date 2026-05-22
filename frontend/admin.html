@@ -4,9 +4,42 @@
 <meta charset="UTF-8">
 <title>BarberIA - Admin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .chart-card-wide {
+    grid-column: span 2;
+  }
+  .chart-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+  }
+  .chart-wrap {
+    position: relative;
+    height: 220px;
+  }
+  .chart-wrap-wide {
+    height: 200px;
+  }
+
 
   :root {
     --gold: #c9a84c;
@@ -567,6 +600,31 @@
         </div>
       </div>
 
+
+      <!-- GRÁFICAS DEL DASHBOARD -->
+      <div class="charts-grid" id="dashboard-charts" style="display:none">
+        <div class="chart-card">
+          <div class="chart-title">📊 Servicios más populares</div>
+          <div class="chart-wrap"><canvas id="chart-servicios"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">✂ Barberos con más citas</div>
+          <div class="chart-wrap"><canvas id="chart-barberos"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">💳 Métodos de pago</div>
+          <div class="chart-wrap"><canvas id="chart-pagos"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">📅 Estado de citas</div>
+          <div class="chart-wrap"><canvas id="chart-estados"></canvas></div>
+        </div>
+        <div class="chart-card chart-card-wide">
+          <div class="chart-title">💰 Ingresos por mes</div>
+          <div class="chart-wrap chart-wrap-wide"><canvas id="chart-ingresos"></canvas></div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <span class="card-title">Citas de hoy</span>
@@ -1105,10 +1163,162 @@ function logout() {
   window.location.href = 'index.html';
 }
 
+
+// Variables globales para los charts
+let chartServicios, chartBarberos, chartPagos, chartEstados, chartIngresos;
+
+const CHART_COLORS = {
+  gold: '#c9a84c',
+  gold2: '#e8c96d',
+  green: '#4CAF50',
+  red: '#ef5350',
+  blue: '#42a5f5',
+  purple: '#ab47bc',
+  orange: '#ff7043',
+  teal: '#26a69a',
+  pink: '#ec407a',
+  indigo: '#5c6bc0',
+};
+
+const PALETA = [
+  '#c9a84c','#e8c96d','#4CAF50','#42a5f5','#ab47bc',
+  '#ff7043','#26a69a','#ec407a','#5c6bc0','#78909c'
+];
+
+const CHART_DEFAULTS = {
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: '#1c1c1c',
+      titleColor: '#c9a84c',
+      bodyColor: '#ffffff',
+      borderColor: '#333',
+      borderWidth: 1,
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: '#888', font: { size: 11 } },
+      grid: { color: 'rgba(255,255,255,0.05)' }
+    },
+    y: {
+      ticks: { color: '#888', font: { size: 11 } },
+      grid: { color: 'rgba(255,255,255,0.05)' }
+    }
+  }
+};
+
+async function cargarChartsAnalytics() {
+  try {
+    const res = await axios.get(`${API_ANALYTICS}/analytics`);
+    const data = res.data;
+    const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+    document.getElementById('dashboard-charts').style.display = 'grid';
+
+    // Destruir charts anteriores si existen
+    [chartServicios, chartBarberos, chartPagos, chartEstados, chartIngresos].forEach(c => c && c.destroy());
+
+    // 1. Servicios más populares (Top 7)
+    const svcs = data.servicios_populares.slice(0, 7);
+    chartServicios = new Chart(document.getElementById('chart-servicios'), {
+      type: 'bar',
+      data: {
+        labels: svcs.map(s => s.servicio.length > 18 ? s.servicio.slice(0,16)+'…' : s.servicio),
+        datasets: [{ data: svcs.map(s => s.total), backgroundColor: PALETA, borderRadius: 6, borderSkipped: false }]
+      },
+      options: { ...CHART_DEFAULTS, responsive: true, maintainAspectRatio: false,
+        plugins: { ...CHART_DEFAULTS.plugins },
+        scales: { x: { ...CHART_DEFAULTS.scales.x }, y: { ...CHART_DEFAULTS.scales.y, beginAtZero: true } }
+      }
+    });
+
+    // 2. Barberos top (Top 7)
+    const barbs = data.barberos_top.slice(0, 7);
+    chartBarberos = new Chart(document.getElementById('chart-barberos'), {
+      type: 'bar',
+      data: {
+        labels: barbs.map(b => b.barbero.split(' ')[0]),
+        datasets: [{ data: barbs.map(b => b.total), backgroundColor: '#c9a84c', borderRadius: 6, borderSkipped: false }]
+      },
+      options: { ...CHART_DEFAULTS, responsive: true, maintainAspectRatio: false,
+        plugins: { ...CHART_DEFAULTS.plugins },
+        scales: { x: { ...CHART_DEFAULTS.scales.x }, y: { ...CHART_DEFAULTS.scales.y, beginAtZero: true } }
+      }
+    });
+
+    // 3. Métodos de pago (dona)
+    chartPagos = new Chart(document.getElementById('chart-pagos'), {
+      type: 'doughnut',
+      data: {
+        labels: data.metodos_pago.map(p => p.metodo_pago),
+        datasets: [{ data: data.metodos_pago.map(p => p.total), backgroundColor: PALETA, borderWidth: 2, borderColor: '#141414' }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '65%',
+        plugins: {
+          legend: { display: true, position: 'right', labels: { color: '#aaa', font: { size: 11 }, boxWidth: 12 } },
+          tooltip: CHART_DEFAULTS.plugins.tooltip
+        }
+      }
+    });
+
+    // 4. Estado de citas (dona)
+    const stateColors = { atendida: '#4CAF50', cancelada: '#ef5350', pendiente: '#c9a84c' };
+    chartEstados = new Chart(document.getElementById('chart-estados'), {
+      type: 'doughnut',
+      data: {
+        labels: data.citas_por_estado.map(e => e.estado.charAt(0).toUpperCase() + e.estado.slice(1)),
+        datasets: [{ data: data.citas_por_estado.map(e => e.total), backgroundColor: data.citas_por_estado.map(e => stateColors[e.estado] || '#888'), borderWidth: 2, borderColor: '#141414' }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '65%',
+        plugins: {
+          legend: { display: true, position: 'right', labels: { color: '#aaa', font: { size: 11 }, boxWidth: 12 } },
+          tooltip: CHART_DEFAULTS.plugins.tooltip
+        }
+      }
+    });
+
+    // 5. Ingresos por mes (línea) - últimos 12 meses
+    const ultimos12 = data.ingresos_por_mes.slice(-12);
+    chartIngresos = new Chart(document.getElementById('chart-ingresos'), {
+      type: 'line',
+      data: {
+        labels: ultimos12.map(i => meses[i.mes - 1] + ' ' + i.anio),
+        datasets: [{
+          label: 'Ingresos COP',
+          data: ultimos12.map(i => parseFloat(i.ingresos)),
+          borderColor: '#c9a84c',
+          backgroundColor: 'rgba(201,168,76,0.15)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#c9a84c',
+          pointRadius: 4,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { ...CHART_DEFAULTS.plugins.tooltip,
+          callbacks: { label: ctx => ' $' + ctx.raw.toLocaleString('es-CO') }
+        }},
+        scales: {
+          x: { ...CHART_DEFAULTS.scales.x },
+          y: { ...CHART_DEFAULTS.scales.y, beginAtZero: false,
+            ticks: { color: '#888', font: { size: 11 }, callback: v => '$' + (v/1000).toFixed(0) + 'K' }
+          }
+        }
+      }
+    });
+
+  } catch(e) {
+    console.warn('No se pudieron cargar las gráficas:', e.message);
+  }
+}
+
 cargarDashboard();
 
 const API_ANALYTICS = 'http://192.168.100.3:3004';
 
+cargarChartsAnalytics();
 async function cargarAnalytics() {
   try {
     const res = await axios.get(`${API_ANALYTICS}/analytics`);

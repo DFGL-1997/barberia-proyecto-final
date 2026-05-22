@@ -2,19 +2,19 @@
   "servicios_populares": [
     {
       "servicio": "Corte de cabello Basico",
-      "total": 541
+      "total": 542
     },
     {
       "servicio": "Arreglo de barba",
-      "total": 531
+      "total": 533
     },
     {
       "servicio": "Corte + lavado",
-      "total": 524
+      "total": 526
     },
     {
       "servicio": "Corte de cabello Basico + barba",
-      "total": 516
+      "total": 517
     },
     {
       "servicio": "Afeitado clasico navaja",
@@ -29,12 +29,12 @@
       "total": 294
     },
     {
-      "servicio": "Corte clasico",
-      "total": 283
+      "servicio": "Corte moderno",
+      "total": 284
     },
     {
-      "servicio": "Corte moderno",
-      "total": 281
+      "servicio": "Corte clasico",
+      "total": 283
     },
     {
       "servicio": "Cejas + barba",
@@ -56,7 +56,7 @@
     },
     {
       "barbero": "Pipe Navajas",
-      "total": 283
+      "total": 284
     },
     {
       "barbero": "Jhon Navajas",
@@ -64,7 +64,7 @@
     },
     {
       "barbero": "Diego Fadero",
-      "total": 281
+      "total": 282
     },
     {
       "barbero": "Tato Fade",
@@ -72,7 +72,7 @@
     },
     {
       "barbero": "Andres El Pro",
-      "total": 279
+      "total": 280
     },
     {
       "barbero": "Mateo Barber",
@@ -80,7 +80,7 @@
     },
     {
       "barbero": "Camilo Pro",
-      "total": 276
+      "total": 277
     }
   ],
   "ingresos_por_mes": [
@@ -203,42 +203,47 @@
       "anio": 2024,
       "mes": 12,
       "ingresos": 6500000.0
+    },
+    {
+      "anio": 2026,
+      "mes": 5,
+      "ingresos": 92000.0
     }
   ],
   "metodos_pago": [
     {
       "metodo_pago": "tarjeta",
-      "total": 1672
+      "total": 1674
     },
     {
       "metodo_pago": "nequi",
-      "total": 1609
+      "total": 1612
     },
     {
       "metodo_pago": "efectivo",
-      "total": 1605
+      "total": 1608
     },
     {
       "metodo_pago": "daviplata",
-      "total": 1575
+      "total": 1577
     },
     {
       "metodo_pago": "transferencia",
-      "total": 1540
+      "total": 1542
     }
   ],
   "citas_por_estado": [
     {
       "estado": "atendida",
-      "total": 5713
+      "total": 5719
     },
     {
       "estado": "cancelada",
-      "total": 2287
+      "total": 2289
     },
     {
       "estado": "pendiente",
-      "total": 1
+      "total": 5
     }
   ],
   "horas_pico": [
@@ -252,15 +257,15 @@
     },
     {
       "hora": 17,
-      "total": 822
+      "total": 823
     },
     {
       "hora": 10,
-      "total": 818
+      "total": 820
     },
     {
       "hora": 14,
-      "total": 814
+      "total": 815
     }
   ]
 }

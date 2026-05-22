@@ -7999,4 +7999,16 @@ id,cliente_id,servicio_id,barbero_id,fecha_hora,precio,estado,metodo_pago,client
 7998,1693,19,21,2023-09-08 17:00:00,60000.00,atendida,nequi,Angie González Pérez,Cejas + barba,Wilmar Style
 7999,381,4,25,2024-12-13 14:00:00,18000.00,atendida,transferencia,Yesid Guerrero Rivera,Corte + lavado,Lucho Precision
 8000,1232,25,31,2024-09-23 17:00:00,80000.00,atendida,tarjeta,Camila Castro Peña,Corte + hidratacion,Cristian Fade
-8001,2032,12,29,2026-05-20 22:00:00,16000.00,pendiente,nequi,Jhoan Castellanos,Corte moderno,El Calvo Cuts
+8001,2032,12,29,2026-05-20 22:00:00,16000.00,cancelada,nequi,Jhoan Castellanos,Corte moderno,El Calvo Cuts
+8002,2033,12,29,2026-05-21 18:00:00,16000.00,cancelada,efectivo,Juan Jose Jimenez,Corte moderno,El Calvo Cuts
+8003,2034,16,5,2026-05-21 19:10:00,12000.00,atendida,tarjeta,pepito perez,Barba completa,El Vikingo
+8004,2035,12,5,2026-05-21 20:00:00,16000.00,atendida,nequi,Norman Navia,Corte moderno,El Vikingo
+8005,2036,12,29,2026-05-21 21:30:00,16000.00,atendida,daviplata,usuario NN,Corte moderno,El Calvo Cuts
+8006,2037,8,29,2026-05-21 23:00:00,18000.00,atendida,transferencia,Edwin Arias,Corte + lavado,El Calvo Cuts
+8007,2038,2,22,2026-05-22 10:20:00,15000.00,pendiente,efectivo,julanito,Corte de cabello Basico + barba,Diego Fadero
+8008,2040,7,30,2026-05-22 10:30:00,8000.00,pendiente,nequi,Usuario NN,Arreglo de barba,Pipe Navajas
+8009,2040,1,3,2026-05-23 22:59:00,12000.00,pendiente,transferencia,Usuario NN,Corte de cabello Basico,Juancho El Indio
+8010,2040,16,14,2026-05-22 17:00:00,12000.00,atendida,nequi,Usuario NN,Barba completa,El Tigre Cuts
+8011,2040,8,26,2026-05-24 13:30:00,18000.00,atendida,efectivo,Usuario NN,Corte + lavado,Andres El Pro
+8012,2040,3,13,2026-05-25 13:30:00,8000.00,pendiente,daviplata,Usuario NN,Arreglo de barba,Camilo Pro
+8013,2036,25,5,2026-05-23 14:50:00,25000.00,pendiente,tarjeta,usuario NN,Corte + hidratacion,El Vikingo

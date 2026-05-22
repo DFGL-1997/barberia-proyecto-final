@@ -6,17 +6,17 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_CLIENTES_NAME}
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_clientes
     ports:
-      - "${DB_CLIENTES_PORT}:3306"
+      - "3306:3306"
     volumes:
       - mysql_clientes_data:/var/lib/mysql
       - ./mysql/init-clientes.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - barberia-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -27,26 +27,23 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 1024M
-        reservations:
-          cpus: '0.5'
           memory: 512M
 
   mysql-servicios:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_SERVICIOS_NAME}
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_servicios
     ports:
-      - "${DB_SERVICIOS_PORT}:3306"
+      - "3307:3306"
     volumes:
       - mysql_servicios_data:/var/lib/mysql
       - ./mysql/init-servicios.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - barberia-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,26 +54,23 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 1024M
-        reservations:
-          cpus: '0.5'
           memory: 512M
 
   mysql-citas:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_CITAS_NAME}
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: db_citas
     ports:
-      - "${DB_CITAS_PORT}:3306"
+      - "3308:3306"
     volumes:
       - mysql_citas_data:/var/lib/mysql
       - ./mysql/init-citas.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - barberia-net
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pmysql"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -87,22 +81,18 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 1024M
-        reservations:
-          cpus: '0.5'
           memory: 512M
 
   usuarios:
-    image: dfgl17/barberia-usuarios:v2.0.0
+    image: dfgl17/barberia-usuarios:v2
     restart: always
     environment:
-      DB_HOST: ${DB_CLIENTES_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_ROOT_PASSWORD}
-      DB_NAME: ${DB_CLIENTES_NAME}
-      NODE_ENV: ${NODE_ENV}
+      DB_HOST: mysql-clientes
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_clientes
     ports:
-      - "${MS_USUARIOS_PORT}:3001"
+      - "3001:3001"
     networks:
       - barberia-net
     deploy:
@@ -112,22 +102,18 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
           memory: 256M
 
   servicios:
-    image: dfgl17/barberia-servicios:v2.0.0
+    image: dfgl17/barberia-servicios:latest
     restart: always
     environment:
-      DB_HOST: ${DB_SERVICIOS_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_ROOT_PASSWORD}
-      DB_NAME: ${DB_SERVICIOS_NAME}
-      NODE_ENV: ${NODE_ENV}
+      DB_HOST: mysql-servicios
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_servicios
     ports:
-      - "${MS_SERVICIOS_PORT}:3002"
+      - "3002:3002"
     networks:
       - barberia-net
     deploy:
@@ -137,22 +123,18 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
           memory: 256M
 
   citas:
-    image: dfgl17/barberia-citas:v4.0.0
+    image: dfgl17/barberia-citas:v4
     restart: always
     environment:
-      DB_HOST: ${DB_CITAS_HOST}
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_ROOT_PASSWORD}
-      DB_NAME: ${DB_CITAS_NAME}
-      NODE_ENV: ${NODE_ENV}
+      DB_HOST: mysql-citas
+      DB_USER: root
+      DB_PASSWORD: mysql
+      DB_NAME: db_citas
     ports:
-      - "${MS_CITAS_PORT}:3003"
+      - "3003:3003"
     networks:
       - barberia-net
     deploy:
@@ -162,16 +144,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
           memory: 256M
 
   frontend:
-    image: dfgl17/barberia-frontend:v4.0.0
+    image: dfgl17/barberia-frontend:v4
     restart: always
     ports:
-      - "${FRONTEND_PORT}:80"
+      - "80:80"
     networks:
       - barberia-net
     deploy:
@@ -181,17 +160,14 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 512M
-        reservations:
-          cpus: '0.25'
           memory: 256M
 
   haproxy:
-    image: dfgl17/barberia-haproxy:v2.0.0
+    image: dfgl17/barberia-haproxy:v2
     restart: always
     ports:
-      - "${HAPROXY_API_PORT}:8080"
-      - "${HAPROXY_STATS_PORT}:8404"
+      - "8080:8080"
+      - "8404:8404"
     networks:
       - barberia-net
     deploy:
@@ -201,19 +177,13 @@ services:
       resources:
         limits:
           cpus: '0.5'
-          memory: 256M
-        reservations:
-          cpus: '0.25'
           memory: 128M
 
   analytics:
-    image: dfgl17/barberia-analytics:v2.0.0
+    image: dfgl17/barberia-analytics:latest
     restart: always
-    environment:
-      SPARK_MASTER: spark://${SPARK_MASTER_HOST}:${SPARK_MASTER_PORT}
-      NODE_ENV: ${NODE_ENV}
     ports:
-      - "${MS_ANALYTICS_PORT}:3004"
+      - "3004:3004"
     volumes:
       - /vagrant/barberia-docker/spark:/app/spark
     networks:
@@ -225,9 +195,6 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 1024M
-        reservations:
-          cpus: '0.5'
           memory: 512M
 
 networks:
